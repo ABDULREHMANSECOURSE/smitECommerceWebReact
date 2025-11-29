@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 
+import Footer from './components/footer';
+
 function App() {
   return (
     <div className="App">
@@ -16,6 +18,7 @@ function App() {
           Parhlo React
         </a>
       </header>
+      <Footer/>
     </div>
   );
 }
