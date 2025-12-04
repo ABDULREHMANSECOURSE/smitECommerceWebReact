@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Eye, EyeOff, UserCircle } from 'lucide-react'; 
+import { Eye, EyeOff, UserCircle } from 'lucide-react';
 import Navbar from '../components/header/navbar';
 
 // --- Global Constants and Utilities ---
@@ -95,7 +95,7 @@ const SignUpComponent = ({
     showSignUpPassword, setShowSignUpPassword, profileImageBase64
 }) => (
     <form onSubmit={handleSignUp} className="auth-form space-y-5-override">
-        
+
         {/* Profile Image Upload */}
         <div className="profile-upload-area">
             <label className="input-label">
@@ -148,7 +148,7 @@ const SignUpComponent = ({
                 <div className="password-input-wrapper">
                     <input
                         type={showSignUpPassword ? 'text' : 'password'}
-                        id="password" 
+                        id="password"
                         value={signUpForm.password}
                         onChange={handleSignUpChange}
                         required
@@ -166,14 +166,14 @@ const SignUpComponent = ({
         <div className="w-full space-y-4-override">
             <div className="input-group">
                 <label htmlFor="dob" className="input-label">Date of Birth (DOB)</label>
-                <input type="date" id="dob" value={signUpForm.dob} onChange={handleSignUpChange} required className="form-input" style={{color: '#374151'}} />
+                <input type="date" id="dob" value={signUpForm.dob} onChange={handleSignUpChange} required className="form-input" style={{ color: '#ffffffff' }} />
             </div>
             <div className="input-group">
                 <label htmlFor="phoneNumber" className="input-label">Phone Number (E.g: +92 XXX XXXXXXX)</label>
                 <input type="tel" id="phoneNumber" value={signUpForm.phoneNumber} onChange={handleSignUpChange} required className="form-input" placeholder="+92 XXX XXXXXXX" />
             </div>
         </div>
-        
+
 
         <button
             type="submit"
@@ -195,14 +195,14 @@ const SignUpComponent = ({
 const ProfileComponent = ({ loggedAccountData, handleLogout, toggleView }) => {
     // Redirects to login page if no data (Route Guard)
     const [redirected, setRedirected] = useState(false);
-    
+
     useEffect(() => {
         if (!loggedAccountData) {
             if (!redirected) {
                 const timer = setTimeout(() => {
                     toggleView('/login');
                     setRedirected(true);
-                }, 500); 
+                }, 500);
                 return () => clearTimeout(timer);
             }
         }
@@ -234,7 +234,7 @@ const ProfileComponent = ({ loggedAccountData, handleLogout, toggleView }) => {
                 <ProfileInfoBox title="Gender" value={gender} />
                 <ProfileInfoBox title="Phone Number" value={phoneNumber} />
             </div>
-            
+
             <button
                 onClick={handleLogout}
                 className="logout-btn"
@@ -260,7 +260,7 @@ const ProfileInfoBox = ({ title, value }) => (
 export default function App() {
     // NOTE: Using localStorage as requested by the provided code structure.
     // For a real-world application, Firebase Firestore would be mandatory.
-    
+
     const [currentView, setCurrentView] = useState('/login');
 
     // State for storing all registered accounts
@@ -278,9 +278,9 @@ export default function App() {
         fName: '', lName: '', gender: 'select gender', email: '',
         password: '', dob: '', phoneNumber: '',
     });
-    const [profileImageBase64, setProfileImageBase64] = useState(null); 
+    const [profileImageBase64, setProfileImageBase64] = useState(null);
     const [showSignUpPassword, setShowSignUpPassword] = useState(false);
-    
+
     // Message State
     const [message, setMessage] = useState({ text: null, type: null });
 
@@ -300,13 +300,13 @@ export default function App() {
 
         // 2. Check login session
         const storedLoggedEmail = localStorage.getItem('logedAccount');
-        
+
         if (storedLoggedEmail && storedLoggedEmail !== 'null') {
             const email = JSON.parse(storedLoggedEmail);
-            
+
             const allAccounts = storedAccounts ? JSON.parse(storedAccounts) : [];
-            const user = allAccounts.find(acc => acc.email === email); 
-            
+            const user = allAccounts.find(acc => acc.email === email);
+
             if (user) {
                 setLoggedAccountData(user);
                 // If logged in, navigate to profile
@@ -318,7 +318,7 @@ export default function App() {
     }, []);
 
     // --- Handlers ---
-    
+
     const handleImageChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -348,12 +348,12 @@ export default function App() {
         e.preventDefault();
         setMessage({ text: null, type: null });
 
-        const user = { profileImageBase64: profileImageBase64 }; 
+        const user = { profileImageBase64: profileImageBase64 };
         let isValid = true;
 
         // NEW: Check if profile image is uploaded
         if (isValid && !profileImageBase64) {
-            handleMessage('Profile photo is required.', 'error'); 
+            handleMessage('Profile photo is required.', 'error');
             isValid = false;
         }
 
@@ -371,7 +371,7 @@ export default function App() {
         } else if (isValid) { user.gender = signUpForm.gender; }
 
         if (isValid) {
-            const lowerCaseEmail = signUpForm.email.toLowerCase(); 
+            const lowerCaseEmail = signUpForm.email.toLowerCase();
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (accounts.some(eF => eF.email === lowerCaseEmail)) {
                 handleMessage('This email already exists.', 'error'); isValid = false;
@@ -418,8 +418,8 @@ export default function App() {
                 fName: '', lName: '', gender: 'select gender', email: '',
                 password: '', dob: '', phoneNumber: '',
             });
-            setProfileImageBase64(null); 
-            
+            setProfileImageBase64(null);
+
             toggleView('/login');
         }
     };
@@ -429,7 +429,7 @@ export default function App() {
         e.preventDefault();
         setMessage({ text: null, type: null });
 
-        const lowerCaseLoginEmail = loginEmail.toLowerCase(); 
+        const lowerCaseLoginEmail = loginEmail.toLowerCase();
 
         const foundUser = accounts.find(
             (acc) => acc.email === lowerCaseLoginEmail && acc.password === loginPassword
@@ -438,14 +438,14 @@ export default function App() {
         if (foundUser) {
             // Save only the lowercase email for session
             localStorage.setItem('logedAccount', JSON.stringify(foundUser.email));
-            
-            setLoggedAccountData(foundUser); 
+
+            setLoggedAccountData(foundUser);
 
             handleMessage(`Login Successful! Welcome, ${foundUser.fName}!`, 'success');
 
             setLoginEmail('');
             setLoginPassword('');
-            
+
             // Navigate to profile view
             toggleView('/profile');
         } else {
@@ -506,9 +506,9 @@ export default function App() {
 
     return (
         <>
-        {/* INTERNAL CSS BLOCK */}
-        <style>
-            {`
+            {/* INTERNAL CSS BLOCK */}
+            <style>
+                {`
                 /* Base Reset and Layout */
                 body {
                     margin: 0;
@@ -588,11 +588,14 @@ export default function App() {
                     font-weight: 600; /* font-semibold */
                     color: #ffffffff; /* text-gray-700 */
                 }
+                .gender-select-override option{
+                    color: #000000ff;
+                }
 
-                .form-input, .gender-select-override {
+                .form-input {
                     width: 100%;
                     padding: 0.75rem; /* p-3 */
-                    background-color: #ffffff10; /* bg-gray-100 */
+                    background-color: #00000010; /* bg-gray-100 */
                     border: 1px solid #ffffffff; /* border border-gray-200 */
                     border-radius: 0.5rem; /* rounded-lg */
                     outline: none;
@@ -612,6 +615,7 @@ export default function App() {
                     row-gap: 1.5rem; /* space-y-6 */
                     border-top: 1px solid #d1d5db; /* border-y border-gray-300 */
                     border-bottom: 1px solid #ffffffff;
+                    padding-bottom: 30px;
                 }
 
                 /* Password Input Specifics */
@@ -818,19 +822,19 @@ export default function App() {
                 top:10px;
                 }
             `}
-        </style>
-        
-        <Navbar/>
-        <div className="app-container">
-            <div className="auth-card">
+            </style>
 
-                {/* Status Message */}
-                <MessageDisplay message={message.text} type={message.type} />
+            <Navbar />
+            <div className="app-container">
+                <div className="auth-card">
 
-                {/* Conditional View Rendering */}
-                {renderCurrentView()}
+                    {/* Status Message */}
+                    <MessageDisplay message={message.text} type={message.type} />
+
+                    {/* Conditional View Rendering */}
+                    {renderCurrentView()}
+                </div>
             </div>
-        </div>
         </>
     );
 }
