@@ -773,7 +773,7 @@ export default function App() {
                 }
 
                 .info-box {
-                    background-color: #f3f4f6; /* bg-gray-100 */
+                    background-color: #ffffff11; /* bg-gray-100 */
                     padding: 1rem; /* p-4 */
                     border-radius: 0.75rem; /* rounded-xl */
                     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
@@ -782,13 +782,14 @@ export default function App() {
                 .info-title {
                     font-size: 0.875rem; /* text-sm */
                     font-weight: 600; /* font-semibold */
-                    color: #6b7280; /* text-gray-500 */
+                    color: #ffffffff; /* text-gray-500 */
+                    margin-bottom: 15px;
                 }
 
                 .info-value {
                     font-size: 1.25rem; /* text-xl */
                     font-weight: 500; /* font-medium */
-                    color: #1f2937; /* text-gray-800 */
+                    color: #ffffffff; /* text-gray-800 */
                 }
 
                 .logout-btn {
