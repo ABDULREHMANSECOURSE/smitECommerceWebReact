@@ -385,3 +385,14 @@ a {
     text-decoration: none;
 }
 
+.signinBtn{
+    font-weight: bold;
+    font-size: 25px;
+    color: white;
+    margin-right: 20px;
+    text-shadow: 0 0px 10px #ffffff;
+    transition-duration: 500ms;
+}
+.signinBtn:hover{
+    scale: 1.2;
+}
