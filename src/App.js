@@ -1,6 +1,7 @@
 import './App.css';
 import { Home } from './Home';
 import LogInSignUp from './LoginSignup';
+import {AddProduct} from './addProduct';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; // <-- add this
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path='/account' element={<LogInSignUp/>}/>
+      <Route path='/addProduct' element={<AddProduct/>}/>
     </Routes>
     </BrowserRouter>
   );
