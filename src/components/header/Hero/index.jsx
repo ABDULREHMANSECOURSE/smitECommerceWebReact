@@ -1,6 +1,5 @@
 import React from "react";
 
-// Assets import
 import cartIcon from "../../assets/icons/cart-shopping-solid.svg";
 import astroImage from "../../assets/astro-a50-x-white-gallery-7.png";
 

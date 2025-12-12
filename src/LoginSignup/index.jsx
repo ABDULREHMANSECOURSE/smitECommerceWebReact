@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, UserCircle } from 'lucide-react';
 import Navbar from '../components/header/navbar';
+import './LoginSignup.css';
 
 const readFileAsBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -14,7 +15,7 @@ const readFileAsBase64 = (file) => {
 
 const MessageDisplay = ({ message, type }) => {
     if (!message) return null;
-    const baseClasses = "message-display p-3 rounded-lg w-full text-center font-medium transition-opacity duration-300";
+    const baseClasses = "popUPMessage";
     const colorStyle = type === 'error'
         ? { backgroundColor: '#fef2f2', color: '#b91c1c', border: '1px solid #fca5a5' }
         : { backgroundColor: '#f0fdf4', color: '#16a34a', border: '1px solid #86efac' };

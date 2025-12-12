@@ -16,14 +16,10 @@ export default function Navbar() {
 
   useEffect(() => {
     const loggedEmail = localStorage.getItem('logedAccount');
-
     if (loggedEmail) {
       setIsLoggedIn(true);
-
       const initial = loggedEmail.trim().charAt(1).toUpperCase();
       setUserInitial(initial);
-      // --- 👆 END SIMPLIFIED LOGIC 👆 ---
-
     } else {
       setIsLoggedIn(false);
       setUserInitial(null);
