@@ -2,11 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, UserCircle } from 'lucide-react';
 import Navbar from '../components/header/navbar';
 
-// --- Global Constants and Utilities ---
-
-/**
- * Utility: Converts file to Base64 string.
- */
 const readFileAsBase64 = (file) => {
     return new Promise((resolve, reject) => {
         if (!file) return resolve(null);
@@ -17,11 +12,6 @@ const readFileAsBase64 = (file) => {
     });
 };
 
-// =========================================================================
-//                               EXTERNAL COMPONENTS
-// =========================================================================
-
-// --- 1. Message Component (In place of Alert) ---
 const MessageDisplay = ({ message, type }) => {
     if (!message) return null;
     const baseClasses = "message-display p-3 rounded-lg w-full text-center font-medium transition-opacity duration-300";
