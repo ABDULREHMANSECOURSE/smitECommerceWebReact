@@ -462,6 +462,7 @@ export default function App() {
                 body {
                     margin: 0;
                     padding: 0;
+                    height: 100vh;
                     font-family: 'Inter', sans-serif;
                     background-color: #000000ff; /* bg-gray-50 */
                 }
@@ -471,7 +472,7 @@ export default function App() {
                     display: flex;
                     align-items: flex-start; /* items-start */
                     justify-content: center;
-                    padding: 1rem; /* p-4 */
+                    align-items: center;
                 }
 
                 @media (min-width: 640px) {
