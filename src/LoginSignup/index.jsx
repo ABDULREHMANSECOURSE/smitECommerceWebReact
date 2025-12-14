@@ -774,7 +774,7 @@ export default function App() {
             `}
             </style>
 
-            <Navbar />
+            {localStorage.getItem('logedAccount') && <Navbar />}
             <div className="app-container">
                 <div className="auth-card">
 
