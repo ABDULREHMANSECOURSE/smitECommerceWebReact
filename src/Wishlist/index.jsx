@@ -35,53 +35,65 @@ const Wishlist = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#000', color: '#fff', minHeight: '100vh', padding: '50px 20px', fontFamily: '"Inter", sans-serif' }}>
+    <>
       <style>
         {`
-          .wishlist-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-          .wishlist-header { font-size: 2.5rem; color: #ec4899; margin-bottom: 30px; text-align: center; }
-          .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
-          .wishlist-card { background: #111; border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; }
-          .wishlist-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2); border-color: #ec4899; }
-          .wishlist-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
-          .wishlist-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
-          .wishlist-price { color: #aaa; margin-bottom: 15px; }
-          .btn-group { display: flex; flex-direction: column; gap: 10px; }
-          .move-btn { background: #4f46e5; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-          .move-btn:hover { background: #4338ca; }
-          .remove-btn { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-          .remove-btn:hover { background: #ef4444; color: white; }
-          .empty-msg { text-align: center; font-size: 1.5rem; color: #888; padding: 50px; }
-          .shop-link { color: #ec4899; text-decoration: none; font-weight: bold; }
-          .shop-link:hover { text-decoration: underline; }
+          .wl-page { background: #000; color: #fff; min-height: 100vh; padding: 30px 15px; font-family: 'Segoe UI', sans-serif; }
+          .wl-container { max-width: 1100px; margin: 0 auto; }
+          .wl-header { font-size: 2rem; color: #ec4899; margin-bottom: 25px; text-align: center; }
+          .wl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+          .wl-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 15px; text-align: center; transition: 0.3s; }
+          .wl-card:hover { border-color: #ec4899; transform: translateY(-3px); }
+          .wl-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+          .wl-title { font-size: 1rem; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .wl-price { color: #aaa; margin-bottom: 12px; font-size: 0.9rem; }
+          .wl-btn-group { display: flex; flex-direction: column; gap: 8px; }
+          .wl-move-btn { background: #4f46e5; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+          .wl-move-btn:hover { background: #4338ca; }
+          .wl-rm-btn { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+          .wl-rm-btn:hover { background: #ef4444; color: white; }
+          .wl-empty { text-align: center; font-size: 1.2rem; color: #666; padding: 60px 20px; }
+          .wl-shop-link { color: #ec4899; text-decoration: none; font-weight: bold; }
+          .wl-shop-link:hover { text-decoration: underline; }
+
+          @media (max-width: 700px) {
+            .wl-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .wl-card img { height: 130px; }
+            .wl-title { font-size: 0.85rem; }
+            .wl-price { font-size: 0.8rem; }
+            .wl-move-btn, .wl-rm-btn { font-size: 11px; padding: 7px; }
+            .wl-header { font-size: 1.5rem; }
+          }
         `}
       </style>
       
-      <div className="wishlist-container">
-        <h1 className="wishlist-header">Your Wishlist</h1>
-        
-        {wishlistItems.length === 0 ? (
-          <div className="empty-msg">
-            Your wishlist is empty. <br/><br/>
-            <Link to="/products" className="shop-link">Browse Products</Link>
-          </div>
-        ) : (
-          <div className="wishlist-grid">
-            {wishlistItems.map(item => (
-              <div className="wishlist-card" key={item.id}>
-                <img src={item.image} alt={item.name} />
-                <div className="wishlist-title">{item.name}</div>
-                <div className="wishlist-price">${item.price}</div>
-                <div className="btn-group">
-                  <button className="move-btn" onClick={() => moveToCart(item)}>Move to Cart</button>
-                  <button className="remove-btn" onClick={() => removeWishlist(item.id)}>Remove</button>
+      <div className="wl-page">
+        <div className="wl-container">
+          <h1 className="wl-header">Your Wishlist</h1>
+          
+          {wishlistItems.length === 0 ? (
+            <div className="wl-empty">
+              Your wishlist is empty.<br/><br/>
+              <Link to="/products" className="wl-shop-link">Browse Products</Link>
+            </div>
+          ) : (
+            <div className="wl-grid">
+              {wishlistItems.map(item => (
+                <div className="wl-card" key={item.id}>
+                  <img src={item.image} alt={item.name} />
+                  <div className="wl-title">{item.name}</div>
+                  <div className="wl-price">${item.price}</div>
+                  <div className="wl-btn-group">
+                    <button className="wl-move-btn" onClick={() => moveToCart(item)}>Move to Cart</button>
+                    <button className="wl-rm-btn" onClick={() => removeWishlist(item.id)}>Remove</button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

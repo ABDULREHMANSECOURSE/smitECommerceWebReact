@@ -2,16 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, UserCircle } from 'lucide-react';
 import './LoginSignup.css';
 
-const readFileAsBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        if (!file) return resolve(null);
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-    });
-};
-
 const MessageDisplay = ({ message, type }) => {
     if (!message) return null;
     const baseClasses = "popUPMessage";
@@ -79,50 +69,15 @@ const LoginComponent = ({
 );
 
 const SignUpComponent = ({
-    signUpForm, handleSignUpChange, handleSignUp, handleImageChange, toggleView,
-    showSignUpPassword, setShowSignUpPassword, profileImageBase64
+    signUpForm, handleSignUpChange, handleSignUp, toggleView,
+    showSignUpPassword, setShowSignUpPassword
 }) => (
     <form onSubmit={handleSignUp} className="auth-form space-y-5-override">
-
-        <div className="profile-upload-area">
-            <label className="input-label">
-                Profile Photo (Required)
-            </label>
-            <div className="profile-image-container">
-                {profileImageBase64 ? (
-                    <img src={profileImageBase64} alt="Profile Preview" className="profile-image" />
-                ) : (
-                    <UserCircle size={48} style={{ color: '#6b7280' }} />
-                )}
-                <input
-                    type="file"
-                    id="profileImage"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="profile-file-input"
-                />
-            </div>
-        </div>
-
-        <div className="name-fields-group">
-            <div className="input-group flex-1-override">
-                <label htmlFor="fName" className="input-label">First Name</label>
-                <input type="text" id="fName" value={signUpForm.fName} onChange={handleSignUpChange} required className="form-input" placeholder="First Name" />
-            </div>
-            <div className="input-group flex-1-override">
-                <label htmlFor="lName" className="input-label">Last Name</label>
-                <input type="text" id="lName" value={signUpForm.lName} onChange={handleSignUpChange} required className="form-input" placeholder="Last Name" />
-            </div>
-        </div>
-
-        <select id="gender" value={signUpForm.gender} onChange={handleSignUpChange} required className="form-input gender-select-override">
-            <option value="select gender" disabled>Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-        </select>
-
         <div className="w-full space-y-4-override">
+            <div className="input-group">
+                <label htmlFor="name" className="input-label">Full Name</label>
+                <input type="text" id="name" value={signUpForm.name} onChange={handleSignUpChange} required className="form-input" placeholder="Your full name" />
+            </div>
             <div className="input-group">
                 <label htmlFor="email" className="input-label">Email</label>
                 <input type="email" id="email" value={signUpForm.email} onChange={handleSignUpChange} required className="form-input" placeholder="youremail@example.com" />
@@ -145,18 +100,6 @@ const SignUpComponent = ({
                 </div>
             </div>
         </div>
-
-        <div className="w-full space-y-4-override">
-            <div className="input-group">
-                <label htmlFor="dob" className="input-label">Date of Birth (DOB)</label>
-                <input type="date" id="dob" value={signUpForm.dob} onChange={handleSignUpChange} required className="form-input" style={{ color: '#ffffffff' }} />
-            </div>
-            <div className="input-group">
-                <label htmlFor="phoneNumber" className="input-label">Phone Number (E.g: +92 XXX XXXXXXX)</label>
-                <input type="tel" id="phoneNumber" value={signUpForm.phoneNumber} onChange={handleSignUpChange} required className="form-input" placeholder="+92 XXX XXXXXXX" />
-            </div>
-        </div>
-
 
         <button
             type="submit"
@@ -193,26 +136,19 @@ const ProfileComponent = ({ loggedAccountData, handleLogout, toggleView }) => {
         return <div className="loading-message">Profile data not found. Redirecting to login...</div>;
     }
 
-    const { fName, lName, dob, gender, email, phoneNumber, profileImageBase64 } = loggedAccountData;
+    const { name, email } = loggedAccountData;
 
     return (
         <div className="profile-container">
             <h2 className="profile-title">Your Profile</h2>
 
             <div className="profile-image-large-container">
-                {profileImageBase64 ? (
-                    <img src={profileImageBase64} alt="Profile" className="profile-image" />
-                ) : (
-                    <UserCircle size={80} style={{ color: '#9ca3af' }} />
-                )}
+                <UserCircle size={80} style={{ color: '#9ca3af' }} />
             </div>
 
             <div className="profile-data-wrapper">
-                <ProfileInfoBox title="Name" value={`${fName} ${lName}`} />
+                <ProfileInfoBox title="Name" value={name} />
                 <ProfileInfoBox title="Email" value={email} />
-                <ProfileInfoBox title="Date of Birth (DOB)" value={dob} />
-                <ProfileInfoBox title="Gender" value={gender} />
-                <ProfileInfoBox title="Phone Number" value={phoneNumber} />
             </div>
 
             <button
@@ -243,10 +179,8 @@ export default function App() {
     const [loginPassword, setLoginPassword] = useState('');
     const [showLoginPassword, setShowLoginPassword] = useState(false);
     const [signUpForm, setSignUpForm] = useState({
-        fName: '', lName: '', gender: 'select gender', email: '',
-        password: '', dob: '', phoneNumber: '',
+        name: '', email: '', password: '',
     });
-    const [profileImageBase64, setProfileImageBase64] = useState(null);
     const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
     const [message, setMessage] = useState({ text: null, type: null });
@@ -280,19 +214,7 @@ export default function App() {
     }, []);
 
 
-    const handleImageChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            try {
-                const base64 = await readFileAsBase64(file);
-                setProfileImageBase64(base64);
-                handleMessage('Image uploaded successfully!', 'success');
-            } catch (error) {
-                handleMessage('Could not read image file.', 'error');
-                setProfileImageBase64(null);
-            }
-        }
-    };
+
 
     const handleSignUpChange = (e) => {
         const { id, value } = e.target;
@@ -308,25 +230,12 @@ export default function App() {
         e.preventDefault();
         setMessage({ text: null, type: null });
 
-        const user = { profileImageBase64: profileImageBase64 };
+        const user = {};
         let isValid = true;
 
-        if (isValid && !profileImageBase64) {
-            handleMessage('Profile photo is required.', 'error');
-            isValid = false;
-        }
-
-        if (isValid && (signUpForm.fName.length < 3 || signUpForm.fName.length > 12)) {
-            handleMessage('First Name must be between 3 and 12 characters.', 'error'); isValid = false;
-        } else if (isValid) { user.fName = signUpForm.fName; }
-
-        if (isValid && (signUpForm.lName.length < 3 || signUpForm.lName.length > 12)) {
-            handleMessage('Last Name must be between 3 and 12 characters.', 'error'); isValid = false;
-        } else if (isValid) { user.lName = signUpForm.lName; }
-
-        if (isValid && signUpForm.gender === 'select gender') {
-            handleMessage('Please select gender.', 'error'); isValid = false;
-        } else if (isValid) { user.gender = signUpForm.gender; }
+        if (isValid && signUpForm.name.trim().length < 2) {
+            handleMessage('Name must be at least 2 characters.', 'error'); isValid = false;
+        } else if (isValid) { user.name = signUpForm.name.trim(); }
 
         if (isValid) {
             const lowerCaseEmail = signUpForm.email.toLowerCase();
@@ -350,19 +259,6 @@ export default function App() {
             }
         }
 
-        if (isValid && !signUpForm.dob) {
-            handleMessage('Please enter a valid Date of Birth.', 'error'); isValid = false;
-        } else if (isValid) { user.dob = signUpForm.dob; }
-
-        if (isValid) {
-            const phoneNumberRegex = /^((\+92|0092|92)?(0)?)(3)([0-9]{9})$/;
-            if (!phoneNumberRegex.test(signUpForm.phoneNumber)) {
-                handleMessage('Invalid phone number (Pakistani format: e.g., 03XXXXXXXXX is required).', 'error'); isValid = false;
-            } else {
-                user.phoneNumber = signUpForm.phoneNumber;
-            }
-        }
-
         if (isValid) {
             const newAccounts = [...accounts, user];
             setAccounts(newAccounts);
@@ -370,11 +266,7 @@ export default function App() {
 
             handleMessage('Account created successfully! You can now log in.', 'success');
 
-            setSignUpForm({
-                fName: '', lName: '', gender: 'select gender', email: '',
-                password: '', dob: '', phoneNumber: '',
-            });
-            setProfileImageBase64(null);
+            setSignUpForm({ name: '', email: '', password: '' });
 
             toggleView('/login');
         }
@@ -435,7 +327,6 @@ export default function App() {
                         <SignUpComponent
                             signUpForm={signUpForm} handleSignUpChange={handleSignUpChange}
                             handleSignUp={handleSignUp} toggleView={toggleView}
-                            handleImageChange={handleImageChange} profileImageBase64={profileImageBase64}
                             showSignUpPassword={showSignUpPassword} setShowSignUpPassword={setShowSignUpPassword}
                         />
                     </>
@@ -469,14 +360,14 @@ export default function App() {
                 .app-container {
                     min-height: 100vh;
                     display: flex;
-                    align-items: flex-start; /* items-start */
-                    justify-content: center;
                     align-items: center;
+                    justify-content: center;
+                    padding: 20px 15px;
                 }
 
                 @media (min-width: 640px) {
                     .app-container {
-                        padding: 2rem; /* sm:p-8 */
+                        padding: 2rem;
                     }
                 }
 
@@ -603,11 +494,13 @@ export default function App() {
                 .name-fields-group {
                     display: flex;
                     width: 100%;
-                    column-gap: 1rem; /* gap-4 */
+                    column-gap: 1rem;
+                    flex-wrap: wrap;
                 }
                 
                 .flex-1-override {
                     flex: 1;
+                    min-width: 120px;
                 }
 
                 /* Buttons */
@@ -766,10 +659,21 @@ export default function App() {
                     color: #6b7280;
                     font-weight: 600;
                 }
-                
-                nav{
-                width:90%;
-                top:10px;
+
+                @media (max-width: 500px) {
+                    .auth-card {
+                        padding: 1.2rem;
+                        border-radius: 1rem;
+                    }
+                    .main-heading {
+                        font-size: 1.5rem;
+                    }
+                    .name-fields-group {
+                        flex-direction: column;
+                    }
+                    .submit-btn {
+                        font-size: 1rem;
+                    }
                 }
             `}
             </style>

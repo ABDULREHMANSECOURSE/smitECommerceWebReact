@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,53 +39,67 @@ const Search = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#000', color: '#fff', minHeight: '100vh', padding: '50px 20px', fontFamily: '"Inter", sans-serif' }}>
+    <>
       <style>
         {`
-          .search-container { max-width: 1200px; margin: 0 auto; text-align: center; }
-          .search-header { font-size: 2.5rem; color: #10b981; margin-bottom: 20px; }
-          .search-input { width: 100%; max-width: 600px; padding: 15px 20px; font-size: 1.2rem; background: #111; border: 2px solid #333; border-radius: 50px; color: white; outline: none; transition: 0.3s; margin-bottom: 40px; }
-          .search-input:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-          .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-          .result-card { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; transition: 0.3s; }
-          .result-card:hover { transform: scale(1.02); border-color: #10b981; }
-          .result-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
-          .result-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
-          .result-price { color: #10b981; font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; }
-          .result-cat { color: #888; margin-bottom: 15px; font-size: 0.9rem; }
-          .add-btn { width: 100%; padding: 10px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-          .add-btn:hover { background: #4338ca; }
-          .no-results { font-size: 1.5rem; color: #888; margin-top: 50px; }
+          .srch-page { background: #000; color: #fff; min-height: 100vh; padding: 30px 15px; font-family: 'Segoe UI', sans-serif; }
+          .srch-container { max-width: 1100px; margin: 0 auto; text-align: center; }
+          .srch-header { font-size: 2rem; color: #10b981; margin-bottom: 20px; }
+          .srch-input { width: 100%; max-width: 500px; padding: 14px 20px; font-size: 1rem; background: #1a1a1a; border: 2px solid #333; border-radius: 50px; color: white; outline: none; transition: 0.3s; margin-bottom: 30px; }
+          .srch-input:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+          .srch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; }
+          .srch-card { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; transition: 0.3s; }
+          .srch-card:hover { border-color: #10b981; transform: translateY(-3px); }
+          .srch-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+          .srch-title { font-size: 1rem; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .srch-price { color: #10b981; font-weight: bold; font-size: 1rem; margin-bottom: 4px; }
+          .srch-cat { color: #666; margin-bottom: 12px; font-size: 0.8rem; }
+          .srch-add-btn { width: 100%; padding: 10px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+          .srch-add-btn:hover { background: #4338ca; }
+          .srch-no { font-size: 1.2rem; color: #666; margin-top: 40px; }
+
+          @media (max-width: 700px) {
+            .srch-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .srch-card img { height: 130px; }
+            .srch-title { font-size: 0.85rem; }
+            .srch-price { font-size: 0.85rem; }
+            .srch-header { font-size: 1.5rem; }
+            .srch-input { font-size: 0.9rem; padding: 12px 16px; }
+          }
         `}
       </style>
       
-      <div className="search-container">
-        <h1 className="search-header">Search Products</h1>
-        <input 
-          type="text" 
-          className="search-input" 
-          placeholder="Search by name or category..." 
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-        
-        {filteredProducts.length === 0 ? (
-          <div className="no-results">No products found matching "{searchTerm}"</div>
-        ) : (
-          <div className="results-grid">
-            {filteredProducts.map(product => (
-              <div className="result-card" key={product.id}>
-                <img src={product.image} alt={product.name} />
-                <div className="result-title">{product.name}</div>
-                <div className="result-price">${product.price}</div>
-                <div className="result-cat">{product.category.replace("&", " & ")}</div>
-                <button className="add-btn" onClick={() => addToCart(product)}>Add to Cart</button>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="srch-page">
+        <div className="srch-container">
+          <h1 className="srch-header">Search Products</h1>
+          <input 
+            type="text" 
+            className="srch-input" 
+            placeholder="Search by name or category..." 
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          
+          {filteredProducts.length === 0 ? (
+            <div className="srch-no">No products found matching "{searchTerm}"</div>
+          ) : (
+            <div className="srch-grid">
+              {filteredProducts.map(product => (
+                <div className="srch-card" key={product.id}>
+                  <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
+                    <img src={product.image} alt={product.name} />
+                    <div className="srch-title">{product.name}</div>
+                  </Link>
+                  <div className="srch-price">${product.price}</div>
+                  <div className="srch-cat">{product.category.replace("&", " & ")}</div>
+                  <button className="srch-add-btn" onClick={() => addToCart(product)}>Add to Cart</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

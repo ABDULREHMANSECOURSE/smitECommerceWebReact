@@ -68,13 +68,7 @@ export function AddProduct() {
     return (
         <>
             <style jsx>{`
-                * { margin: 0; 
-                    padding: 0; 
-                    box-sizing: 
-                    border-box; 
-                }
-                
-                body, .container {
+                .add-prod-container {
                     min-height: 100vh;
                     background: #000000;
                     color: #ffffff;
@@ -306,7 +300,7 @@ export function AddProduct() {
                 }
             `}</style>
 
-            <div className="container">
+            <div className="add-prod-container">
                 {popup.message && (
                     <div className={`popup ${popup.isSuccess ? 'success' : 'error'}`}>
                         {popup.message}

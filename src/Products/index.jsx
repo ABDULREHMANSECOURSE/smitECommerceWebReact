@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import electronics from "./assets/category/electronics.webp";
 import clothing from "./assets/category/clothing&Apparel.jpg";
@@ -113,17 +114,20 @@ const Shop = () => {
         ) : (
           filteredProducts.map(product => (
             <div key={product.id} className="productOverView product" style={{ paddingBottom: '15px' }}>
-              <img src={product.image} alt={product.name} />
-              <h3>{product.name}</h3>
+              <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <img src={product.image} alt={product.name} />
+                <h3>{product.name}</h3>
+              </Link>
               <p>Price: ${product.price}</p>
               <p style={{ marginBottom: '15px' }}>{product.category.replace("&", " & ")}</p>
               
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap', width: '100%' }}>
                 <button 
                   onClick={() => addToCart(product)}
                   style={{
-                    padding: '8px 15px', background: '#4f46e5', color: '#fff', 
-                    border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold'
+                    padding: '6px 12px', background: '#4f46e5', color: '#fff', 
+                    border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold',
+                    fontSize: '12px', flex: '1', minWidth: '80px'
                   }}
                 >
                   Add to Cart
@@ -131,8 +135,9 @@ const Shop = () => {
                 <button 
                   onClick={() => addToWishlist(product)}
                   style={{
-                    padding: '8px 15px', background: '#ec4899', color: '#fff', 
-                    border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold'
+                    padding: '6px 12px', background: '#ec4899', color: '#fff', 
+                    border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold',
+                    fontSize: '12px', flex: '1', minWidth: '80px'
                   }}
                 >
                   ♥ Wishlist

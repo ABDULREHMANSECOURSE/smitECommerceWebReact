@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import "../../style.css";
 import Logo from "../../assets/arp.png";
@@ -7,7 +7,6 @@ import searchIcon from "../../assets/icons/magnifying-glass-solid.svg";
 import heartIcon from "../../assets/icons/heart-regular.svg";
 import cartIcon from "../../assets/icons/cart-shopping-solid.svg";
 import userIcon from "../../assets/icons/user-regular.svg";
-import menuBars from "../../assets/icons/bars-solid.svg";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +14,13 @@ export default function Navbar() {
   const [userInitial, setUserInitial] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const navRef = useRef(null);
+  const location = useLocation();
+
+  // Close menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
 
   const updateCounts = () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -45,25 +51,32 @@ export default function Navbar() {
     }
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen ? true : false);
-  };
-
-  const mobileMenu = useRef(null);
+  // Close menu when clicking outside nav
+  const handleClickOutside = useCallback((e) => {
+    if (navRef.current && !navRef.current.contains(e.target)) {
+      setIsMenuOpen(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
-      mobileMenu.current.style.display = "flex";
-    } else {
-      mobileMenu.current.style.display = "none";
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
     }
-  }, [isMenuOpen])
-  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isMenuOpen, handleClickOutside]);
+
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
-    <nav>
-      <Link to="/" className="logo">
+    <nav ref={navRef}>
+      <Link to="/" className="logo" onClick={closeMenu}>
         <img src={Logo} alt="logo" />
       </Link>
+
       <span className="navPages">
         <Link to="/">Home</Link>
         <Link to="/products">Products</Link>
@@ -71,52 +84,60 @@ export default function Navbar() {
         <Link to="/contact">Contact</Link>
       </span>
 
-      <span className="navIcons" >
-        <style>
-          {`
-            .icon-wrapper { position: relative; display: inline-block; }
-            .badge { 
-              position: absolute; top: -8px; right: -8px; 
-              background: #ec4899; color: white; border-radius: 50%; 
-              padding: 2px 6px; font-size: 0.75rem; font-weight: bold; 
-            }
-          `}
-        </style>
-        <>
-          <Link to="/search"><img src={searchIcon} alt="Search" /></Link>
-          <Link to="/wishlist" className="icon-wrapper">
-            <img src={heartIcon} alt="Wishlist" />
-            {wishlistCount > 0 && <span className="badge">{wishlistCount}</span>}
-          </Link>
-          <Link to="/cart" className="icon-wrapper">
-            <img src={cartIcon} alt="Cart" />
-            {cartCount > 0 && <span className="badge" style={{background: '#4f46e5'}}>{cartCount}</span>}
-          </Link>
+      <span className="navIcons">
+        <Link to="/search" onClick={closeMenu}><img src={searchIcon} alt="Search" /></Link>
+        <Link to="/wishlist" className="icon-wrapper" onClick={closeMenu}>
+          <img src={heartIcon} alt="Wishlist" />
+          {wishlistCount > 0 && <span className="badge">{wishlistCount}</span>}
+        </Link>
+        <Link to="/cart" className="icon-wrapper" onClick={closeMenu}>
+          <img src={cartIcon} alt="Cart" />
+          {cartCount > 0 && <span className="badge" style={{background: '#4f46e5'}}>{cartCount}</span>}
+        </Link>
 
-          {isLoggedIn ? (
-            <Link to="/account">
-              {userInitial ? (
-                <div className="profile-initial-style">
-                  {userInitial}
-                </div>
-              ) : (
-                <img src={userIcon} alt="Account Icon" />
-              )}
-            </Link>
-          ) : (
-            <Link to="/account" className="signinBtn" style={{ marginLeft: '10px' }}>Sign In</Link>
-          )}
-        </>
+        {isLoggedIn ? (
+          <Link to="/account" onClick={closeMenu}>
+            {userInitial ? (
+              <div className="profile-initial-style">
+                {userInitial}
+              </div>
+            ) : (
+              <img src={userIcon} alt="Account Icon" />
+            )}
+          </Link>
+        ) : (
+          <Link to="/account" className="signinBtn" onClick={closeMenu}>Sign In</Link>
+        )}
       </span>
 
-      <span className="mobileMenu" ref={mobileMenu}>
-        <Link to="/">Home</Link>
-        <Link to="/products">Products</Link>
-        <Link to="/about">About</Link>
-        <Link to="/contact">Contact</Link>
-      </span>
+      {/* Hamburger / Close icon */}
+      <div className="menuIcon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        {isMenuOpen ? (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        ) : (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        )}
+      </div>
 
-      <img className="menuIcon" src={menuBars} alt="Menu Icon" onClick={toggleMenu} />
+      {/* Overlay when menu is open */}
+      {isMenuOpen && <div className="menuOverlay" onClick={closeMenu}></div>}
+
+      {/* Mobile menu */}
+      <div className={`mobileMenu ${isMenuOpen ? 'mobileMenuOpen' : ''}`}>
+        <Link to="/" onClick={closeMenu}>Home</Link>
+        <Link to="/products" onClick={closeMenu}>Products</Link>
+        <Link to="/about" onClick={closeMenu}>About</Link>
+        <Link to="/contact" onClick={closeMenu}>Contact</Link>
+        <Link to="/cart" onClick={closeMenu}>Cart</Link>
+        <Link to="/wishlist" onClick={closeMenu}>Wishlist</Link>
+      </div>
     </nav>
   );
 }
