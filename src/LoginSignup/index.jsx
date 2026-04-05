@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, UserCircle } from 'lucide-react';
-import Navbar from '../components/header/navbar';
 import './LoginSignup.css';
 
 const readFileAsBase64 = (file) => {
@@ -775,7 +774,6 @@ export default function App() {
             `}
             </style>
 
-            {localStorage.getItem('logedAccount') && <Navbar />}
             <div className="app-container">
                 <div className="auth-card">
 

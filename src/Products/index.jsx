@@ -41,7 +41,38 @@ const Shop = () => {
   useEffect(() => {
     const saved = localStorage.getItem("products");
     setProducts(saved ? JSON.parse(saved) : defaultProducts);
+    
+    // Ensure defaultProducts are seeded if empty
+    if (!saved) {
+      localStorage.setItem("products", JSON.stringify(defaultProducts));
+    }
   }, []);
+
+  const addToCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existingIndex = cart.findIndex(item => item.id === product.id);
+    if (existingIndex >= 0) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event("cartUpdated"));
+    alert(`${product.name} added to cart!`);
+  };
+
+  const addToWishlist = (product) => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    const existingIndex = wishlist.findIndex(item => item.id === product.id);
+    if (existingIndex < 0) {
+      wishlist.push(product);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      window.dispatchEvent(new Event("wishlistUpdated"));
+      alert(`${product.name} added to wishlist!`);
+    } else {
+      alert(`${product.name} is already in your wishlist!`);
+    }
+  };
 
   const filteredProducts = selectedCategory
     ? products.filter(p => p.category === selectedCategory)
@@ -81,11 +112,32 @@ const Shop = () => {
           </p>
         ) : (
           filteredProducts.map(product => (
-            <div key={product.id} className="productOverView product">
+            <div key={product.id} className="productOverView product" style={{ paddingBottom: '15px' }}>
               <img src={product.image} alt={product.name} />
               <h3>{product.name}</h3>
               <p>Price: ${product.price}</p>
-              <p>{product.category.replace("&", " & ")}</p>
+              <p style={{ marginBottom: '15px' }}>{product.category.replace("&", " & ")}</p>
+              
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <button 
+                  onClick={() => addToCart(product)}
+                  style={{
+                    padding: '8px 15px', background: '#4f46e5', color: '#fff', 
+                    border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold'
+                  }}
+                >
+                  Add to Cart
+                </button>
+                <button 
+                  onClick={() => addToWishlist(product)}
+                  style={{
+                    padding: '8px 15px', background: '#ec4899', color: '#fff', 
+                    border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold'
+                  }}
+                >
+                  ♥ Wishlist
+                </button>
+              </div>
             </div>
           ))
         )}
